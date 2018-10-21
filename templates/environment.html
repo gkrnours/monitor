@@ -1,0 +1,97 @@
+<style>
+	body{
+		max-width: 1000px;
+		margin: 2rem auto;
+	}
+</style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.2/Chart.bundle.js">
+</script>
+<script>
+var temperatures = [];
+var humidities = [];
+
+var env_data = [{% for point in environment %}
+	{t: new Date("{{ point.time }}"),
+		temp: {{ point.temperature }}, hum: {{ point.humidity }} },
+{% endfor %}];
+
+var temperatures = env_data.map(function(point) {
+	return {t:point.t, y:point.temp};
+});
+var humidities = env_data.map(function(point) {
+	return {t:point.t, y:point.hum};
+});
+
+</script>
+
+<h1>Environment!</h1>
+<h2>{{ place }}</h2>
+
+<canvas id="environment" width="800" height="400"></canvas>
+
+<script>
+var ctx = document.getElementById("environment").getContext('2d');
+Chart.scaleService.updateScaleDefaults('linear', {
+	ticks: {
+		min: 20,
+	}
+});
+
+var envChart = new Chart(ctx, {
+	type: 'line',
+	data: {
+		datasets: [
+			{
+				label: "temperature",
+				yAxisID: "temp",
+				data: temperatures,
+				borderColor: 'rgb(205, 130, 0)',
+				fill: false,
+			},
+			{
+				label: "humidity",
+				yAxisID: "hum",
+				data: humidities,
+				borderColor: 'rgb(0, 130, 205)',
+				fill: false,
+			}
+		]
+	},
+	options: {
+		responsiveAnimationDuration: 0,
+		animation: {
+			duration: 0,
+		},
+		hover: {
+			animationDuration: 0,
+		},
+		scales: {
+			xAxes: [
+				{
+					type: 'time',
+				}
+			],
+			yAxes: [
+				{
+					id: "temp",
+					type: "linear",
+					position: "left",
+					ticks: { min: 20, max: 30 },
+				},
+				{
+					id: "hum",
+					type: "linear",
+					position: "right",
+					ticks: { min: 20, max: 80 },
+				},
+			],
+		},
+		elements: {
+			line: {
+				tension: 0,
+			}
+		},
+	}
+});
+
+</script>
