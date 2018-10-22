@@ -31,11 +31,6 @@ var humidities = env_data.map(function(point) {
 
 <script>
 var ctx = document.getElementById("environment").getContext('2d');
-Chart.scaleService.updateScaleDefaults('linear', {
-	ticks: {
-		min: 20,
-	}
-});
 
 var envChart = new Chart(ctx, {
 	type: 'line',
@@ -76,13 +71,19 @@ var envChart = new Chart(ctx, {
 					id: "temp",
 					type: "linear",
 					position: "left",
-					ticks: { min: 20, max: 30 },
+					ticks: { min: 19, max: 31 },
+					gridLines: {
+						color: "rgba(205, 130, 0, 0.2)",
+					},
 				},
 				{
 					id: "hum",
 					type: "linear",
 					position: "right",
 					ticks: { min: 20, max: 80 },
+					gridLines: {
+						color: "rgba(0, 130, 205, 0.2)",
+					},
 				},
 			],
 		},
